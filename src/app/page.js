@@ -23,9 +23,9 @@ export default function Home() {
         setError("File exceeds the 5MB limit.");
         return;
       }
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
       if (!allowedTypes.includes(file.type)) {
-        setError("Invalid file type. Only JPEG, PNG, and WEBP are allowed.");
+        setError("Invalid file type. Only JPEG, PNG, WEBP, HEIC, and HEIF are allowed.");
         return;
       }
       setImage(file);
@@ -89,7 +89,7 @@ export default function Home() {
           <input 
             id="file-input-1"
             type="file" 
-            accept="image/jpeg, image/png, image/webp" 
+            accept="image/jpeg, image/png, image/webp, image/heic, image/heif, .heic, .heif" 
             onChange={(e) => {
               handleImageChange(e, setImage1, setPreview1);
               setModalImage(null);
@@ -115,7 +115,7 @@ export default function Home() {
           <input 
             id="file-input-2"
             type="file" 
-            accept="image/jpeg, image/png, image/webp" 
+            accept="image/jpeg, image/png, image/webp, image/heic, image/heif, .heic, .heif" 
             onChange={(e) => {
               handleImageChange(e, setImage2, setPreview2);
               setModalImage(null);

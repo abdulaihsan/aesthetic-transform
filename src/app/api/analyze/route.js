@@ -11,10 +11,10 @@ export async function POST(req) {
     }
 
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
+    const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
 
     if (!ALLOWED_MIME_TYPES.includes(image1.type) || !ALLOWED_MIME_TYPES.includes(image2.type)) {
-      return NextResponse.json({ error: 'Invalid file type. Only JPEG, PNG, WEBP, and HEIC are allowed.' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid file type. Only JPEG, PNG, WEBP, HEIC, and HEIF are allowed.' }, { status: 400 });
     }
 
     if (image1.size > MAX_FILE_SIZE || image2.size > MAX_FILE_SIZE) {
