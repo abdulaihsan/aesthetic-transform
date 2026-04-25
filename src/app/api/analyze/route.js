@@ -10,9 +10,21 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Both images are required.' }, { status: 400 });
     }
 
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic'];
+
+    if (!ALLOWED_MIME_TYPES.includes(image1.type) || !ALLOWED_MIME_TYPES.includes(image2.type)) {
+      return NextResponse.json({ error: 'Invalid file type. Only JPEG, PNG, WEBP, and HEIC are allowed.' }, { status: 400 });
+    }
+
+    if (image1.size > MAX_FILE_SIZE || image2.size > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: 'File size exceeds the 5MB limit.' }, { status: 400 });
+    }
+
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: 'Gemini API key is not configured in .env.local' }, { status: 500 });
+      console.error('API Key configuration error.');
+      return NextResponse.json({ error: 'Server configuration error.' }, { status: 500 });
     }
 
     // Convert File to base64
@@ -94,9 +106,8 @@ You must strictly adhere to the following JSON structure:
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Gemini API Error:', errorData);
-      return NextResponse.json({ error: 'Failed to analyze images.' }, { status: response.status });
+      console.error('Gemini API request failed with status:', response.status);
+      return NextResponse.json({ error: 'Failed to analyze images due to an internal AI service error.' }, { status: response.status });
     }
 
     const data = await response.json();

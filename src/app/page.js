@@ -19,6 +19,15 @@ export default function Home() {
   const handleImageChange = (e, setImage, setPreview) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError("File exceeds the 5MB limit.");
+        return;
+      }
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        setError("Invalid file type. Only JPEG, PNG, and WEBP are allowed.");
+        return;
+      }
       setImage(file);
       setPreview(URL.createObjectURL(file));
       setResults(null);
@@ -80,7 +89,7 @@ export default function Home() {
           <input 
             id="file-input-1"
             type="file" 
-            accept="image/*" 
+            accept="image/jpeg, image/png, image/webp" 
             onChange={(e) => {
               handleImageChange(e, setImage1, setPreview1);
               setModalImage(null);
@@ -106,7 +115,7 @@ export default function Home() {
           <input 
             id="file-input-2"
             type="file" 
-            accept="image/*" 
+            accept="image/jpeg, image/png, image/webp" 
             onChange={(e) => {
               handleImageChange(e, setImage2, setPreview2);
               setModalImage(null);
