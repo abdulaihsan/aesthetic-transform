@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import styles from './page.module.css';
 import ResultsDisplay from '@/components/ResultsDisplay';
+import appIcon from './icon.png';
 
 export default function Home() {
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [preview1, setPreview1] = useState(null);
   const [preview2, setPreview2] = useState(null);
+  const [modalImage, setModalImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
@@ -60,47 +63,68 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div className={styles.hero}>
-        <h1 className={styles.title}>
-          Unlock Your <span className="gradient-text">Aesthetic</span>
-        </h1>
-        <p className={styles.subtitle}>
+        <div className={styles.titleWrapper}>
+          <Image src={appIcon} alt="Logo" width={60} height={60} className={styles.headingLogo} />
+          <h1 className={styles.title}>
+            <span className="gradient-text">Steal the Look</span>
+          </h1>
+        </div>
+        <marquee className={styles.subtitle} scrollamount="5">
           Upload a photo of yourself and your goal aesthetic. Our AI will analyze your physique and style, providing a step-by-step transformation routine.
-        </p>
+        </marquee>
       </div>
 
       <div className={styles.uploadSection}>
         <div className={styles.uploadBox}>
           <h3>Current You</h3>
-          <label className={styles.dropZone}>
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={(e) => handleImageChange(e, setImage1, setPreview1)} 
-              style={{ display: 'none' }} 
+          <input 
+            id="file-input-1"
+            type="file" 
+            accept="image/*" 
+            onChange={(e) => {
+              handleImageChange(e, setImage1, setPreview1);
+              setModalImage(null);
+            }} 
+            style={{ display: 'none' }} 
+          />
+          {preview1 ? (
+            <img 
+              src={preview1} 
+              alt="Current" 
+              className={styles.thumbnailImage} 
+              onClick={() => setModalImage({ src: preview1, id: 1 })}
             />
-            {preview1 ? (
-              <img src={preview1} alt="Current" className={styles.previewImage} />
-            ) : (
-              <span>📸 Click to upload</span>
-            )}
-          </label>
+          ) : (
+            <label htmlFor="file-input-1" className={styles.dropZone}>
+              <span>Click to upload</span>
+            </label>
+          )}
         </div>
 
         <div className={styles.uploadBox}>
           <h3>Goal Persona</h3>
-          <label className={styles.dropZone}>
-            <input 
-              type="file" 
-              accept="image/*" 
-              onChange={(e) => handleImageChange(e, setImage2, setPreview2)} 
-              style={{ display: 'none' }} 
+          <input 
+            id="file-input-2"
+            type="file" 
+            accept="image/*" 
+            onChange={(e) => {
+              handleImageChange(e, setImage2, setPreview2);
+              setModalImage(null);
+            }} 
+            style={{ display: 'none' }} 
+          />
+          {preview2 ? (
+            <img 
+              src={preview2} 
+              alt="Goal" 
+              className={styles.thumbnailImage} 
+              onClick={() => setModalImage({ src: preview2, id: 2 })}
             />
-            {preview2 ? (
-              <img src={preview2} alt="Goal" className={styles.previewImage} />
-            ) : (
-              <span>✨ Click to upload</span>
-            )}
-          </label>
+          ) : (
+            <label htmlFor="file-input-2" className={styles.dropZone}>
+              <span>Click to upload</span>
+            </label>
+          )}
         </div>
       </div>
 
@@ -114,11 +138,25 @@ export default function Home() {
         {loading ? (
           <><span className={styles.loader}></span> Analyzing...</>
         ) : (
-          'Analyze & Transform ✨'
+          'Analyze & Transform'
         )}
       </button>
 
       {results && <ResultsDisplay results={results} />}
+
+      {modalImage && (
+        <div className={styles.imageModalBackdrop} onClick={() => setModalImage(null)}>
+          <div className={styles.imageModalContent} onClick={e => e.stopPropagation()}>
+            <button className={styles.imageModalClose} onClick={() => setModalImage(null)}>
+              &times;
+            </button>
+            <img src={modalImage.src} alt="Full Size" className={styles.fullSizeImage} />
+            <label htmlFor={`file-input-${modalImage.id}`} className={styles.replaceImageBtn}>
+              Replace Image
+            </label>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
