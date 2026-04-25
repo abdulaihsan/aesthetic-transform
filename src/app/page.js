@@ -46,8 +46,8 @@ export default function Home() {
     setResults(null);
 
     const formData = new FormData();
-    formData.append('image1', image1);
-    formData.append('image2', image2);
+    formData.append('image1', image1, 'image1_safe_name' + (image1.name ? image1.name.substring(image1.name.lastIndexOf('.')) : '.jpg'));
+    formData.append('image2', image2, 'image2_safe_name' + (image2.name ? image2.name.substring(image2.name.lastIndexOf('.')) : '.jpg'));
 
     try {
       const response = await fetch('/api/analyze', {
