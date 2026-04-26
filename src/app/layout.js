@@ -16,10 +16,15 @@ export const metadata = {
   description: "Upload a photo and get a neo-brutalist aesthetic transformation.",
 };
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
